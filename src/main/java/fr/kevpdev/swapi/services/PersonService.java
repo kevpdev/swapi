@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 public interface PersonService {
 
     Mono<PersonDTO> getPersonById(Integer id);
-    Mono<SearchResultDTO<PersonDTO>> getPeopleAll(Integer pageId);
+    Mono<SearchResultDTO<PersonDTO>> getPeople(Integer pageId);
     Mono<SearchResultDTO<PersonDTO>> getPersonByName(String name);
 
 }

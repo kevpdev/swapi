@@ -22,12 +22,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    @Override
     /**
      * Retrives a person by ID
      * @param id person ID
      * @return a Mono containing the PersonDTO object if found or empty if not
      */
+    @Override
     public Mono<PersonDTO> getPersonById(Integer id) {
         return webClient.get()
                 .uri("/{id}", id)
@@ -42,7 +42,7 @@ public class PersonServiceImpl implements PersonService {
      * @return a Mono containing the SearchResultDTO object containing a PersonDTO array
      */
     @Override
-    public Mono<SearchResultDTO<PersonDTO>> getPeopleAll(Integer pageId) {
+    public Mono<SearchResultDTO<PersonDTO>> getPeople(Integer pageId) {
 
         return webClient.get()
                 .uri("/?page={pageId}", pageId)
@@ -50,6 +50,12 @@ public class PersonServiceImpl implements PersonService {
                 .bodyToMono(new ParameterizedTypeReference<SearchResultDTO<PersonDTO>>() {});
     }
 
+
+    /**
+     * Retrives all people by name
+     * @param name person name
+     * @return a Mono containing the PersonDTO object list if found or empty if not
+     */
     @Override
     public Mono<SearchResultDTO<PersonDTO>> getPersonByName(String name) {
         return webClient.get()

@@ -113,7 +113,7 @@ class PersonControllerTest {
          */
         private void shouldReturnAllPeopleWhenStatusOK(Integer pageId) {
 
-            when(personService.getPeopleAll(1)).thenReturn(Mono.just(searchResultDTO));
+            when(personService.getPeople(1)).thenReturn(Mono.just(searchResultDTO));
 
             webTestClient.get()
                     .uri(uriBuilder -> {
@@ -128,14 +128,14 @@ class PersonControllerTest {
                     .expectBody(new ParameterizedTypeReference<SearchResultDTO<PersonDTO>>() {})
                     .isEqualTo(searchResultDTO);
 
-            verify(personService).getPeopleAll(1);
+            verify(personService).getPeople(1);
         }
 
 
     @Test
     public void ShouldReturn404ErrorWhenSearchResultisNotFound() {
 
-        when(personService.getPeopleAll(1)).thenReturn(Mono
+        when(personService.getPeople(1)).thenReturn(Mono
                 .error(WebClientResponseException
                         .create(404,"", null, null, null)));
 
@@ -146,7 +146,7 @@ class PersonControllerTest {
                 .exchange()
                 .expectStatus().isNotFound();
 
-        verify(personService).getPeopleAll(1);
+        verify(personService).getPeople(1);
 
     }
 
