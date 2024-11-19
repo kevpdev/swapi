@@ -29,4 +29,10 @@ public class PersonDTO {
     private List<String> starships;
     private String url;
     private List<String> vehicles;
+
+    /* lists with data */
+    private List<FilmDTO> filmsDTO;
+    private List<StarshipDTO> starshipsDTO;
+    private List<VehicleDTO> vehiclesDTO;
+
 }
