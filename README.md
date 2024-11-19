@@ -19,7 +19,7 @@ Bienvenue dans **SWAPI**, une API Spring Boot conçue pour consommer et servir d
 
 1. Clonez ce dépôt :
    ```bash
-   git clone [<url_du_projet>](https://github.com/kevpdev/swapi)
+   git clone https://github.com/kevpdev/swapi
    ```
 2. Accédez au répertoire du projet :
    ```bash
