@@ -11,32 +11,35 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/v1/people")
 public class PersonController {
 
-    private final PersonService personService;
+  private final PersonService personService;
 
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
+  public PersonController(PersonService personService) {
+    this.personService = personService;
+  }
 
-    @GetMapping("/{id}")
-    public Mono<ResponseEntity<PersonDTO>> getPersonById(@PathVariable int id) {
-        return personService.getPersonById(id)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
+  @GetMapping("/{id}")
+  public Mono<ResponseEntity<PersonDTO>> getPersonById(@PathVariable int id) {
+    return personService
+        .getPersonById(id)
+        .map(ResponseEntity::ok)
+        .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
 
-    @GetMapping
-    public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPeople(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageId) {
-        return personService.getPeople(pageId)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
+  @GetMapping
+  public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPeople(
+      @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageId) {
+    return personService
+        .getPeople(pageId)
+        .map(ResponseEntity::ok)
+        .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
 
-    @GetMapping("/search")
-    public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPersonByName(@RequestParam String name) {
-        return personService.getPersonByName(name)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
+  @GetMapping("/search")
+  public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPersonByName(
+      @RequestParam String name) {
+    return personService
+        .getPersonByName(name)
+        .map(ResponseEntity::ok)
+        .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
 }

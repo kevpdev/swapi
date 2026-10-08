@@ -9,22 +9,22 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ErrorDetail> handleWebClientResponseException(WebClientResponseException ex) {
-        HttpStatus status = (HttpStatus) ex.getStatusCode();
-        String message = ex.getMessage();
+  @ExceptionHandler(WebClientResponseException.class)
+  public ResponseEntity<ErrorDetail> handleWebClientResponseException(
+      WebClientResponseException ex) {
+    HttpStatus status = (HttpStatus) ex.getStatusCode();
+    String message = ex.getMessage();
 
-        ErrorDetail errorDetail = new ErrorDetail(status.value(), message);
+    ErrorDetail errorDetail = new ErrorDetail(status.value(), message);
 
-        return ResponseEntity.status(status).body(errorDetail);
-    }
+    return ResponseEntity.status(status).body(errorDetail);
+  }
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorDetail> handleGenericException(Exception ex) {
+    String message = "Erreur inattendue : " + ex.getMessage();
+    ErrorDetail errorDetail = new ErrorDetail(HttpStatus.INTERNAL_SERVER_ERROR.value(), message);
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetail> handleGenericException(Exception ex) {
-        String message = "Erreur inattendue : " + ex.getMessage();
-        ErrorDetail errorDetail = new ErrorDetail(HttpStatus.INTERNAL_SERVER_ERROR.value(), message);
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
-    }
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
+  }
 }

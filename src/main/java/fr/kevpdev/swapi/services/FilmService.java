@@ -6,7 +6,9 @@ import reactor.core.publisher.Mono;
 
 public interface FilmService {
 
-    Mono<FilmDTO> getFilmById(Integer id);
-    Mono<SearchResultDTO<FilmDTO>> getFilms(Integer pageId);
-    Mono<SearchResultDTO<FilmDTO>> getFilmByTitle(String title);
+  Mono<FilmDTO> getFilmById(Integer id);
+
+  Mono<SearchResultDTO<FilmDTO>> getFilms(Integer pageId);
+
+  Mono<SearchResultDTO<FilmDTO>> getFilmByTitle(String title);
 }

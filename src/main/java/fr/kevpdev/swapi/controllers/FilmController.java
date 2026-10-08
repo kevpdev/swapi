@@ -11,28 +11,25 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/v1/films")
 public class FilmController {
 
-    private final FilmService filmService;
+  private final FilmService filmService;
 
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
+  public FilmController(FilmService filmService) {
+    this.filmService = filmService;
+  }
 
-    @GetMapping("/{id}")
-    public Mono<ResponseEntity<FilmDTO>> getFilmById(@PathVariable int id) {
-        return filmService.getFilmById(id)
-                .map(ResponseEntity::ok);
-    }
+  @GetMapping("/{id}")
+  public Mono<ResponseEntity<FilmDTO>> getFilmById(@PathVariable int id) {
+    return filmService.getFilmById(id).map(ResponseEntity::ok);
+  }
 
-    @GetMapping
-    public Mono<ResponseEntity<SearchResultDTO<FilmDTO>>> getFilms(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageId) {
-        return filmService.getFilms(pageId)
-                .map(ResponseEntity::ok);
-    }
+  @GetMapping
+  public Mono<ResponseEntity<SearchResultDTO<FilmDTO>>> getFilms(
+      @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageId) {
+    return filmService.getFilms(pageId).map(ResponseEntity::ok);
+  }
 
-    @GetMapping("/search")
-    public Mono<ResponseEntity<SearchResultDTO<FilmDTO>>> getFilmByName(@RequestParam String title) {
-        return filmService.getFilmByTitle(title)
-                .map(ResponseEntity::ok);
-    }
+  @GetMapping("/search")
+  public Mono<ResponseEntity<SearchResultDTO<FilmDTO>>> getFilmByName(@RequestParam String title) {
+    return filmService.getFilmByTitle(title).map(ResponseEntity::ok);
+  }
 }
