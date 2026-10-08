@@ -1,6 +1,10 @@
 package fr.kevpdev.swapi.services.impl;
 
-import fr.kevpdev.swapi.dtos.*;
+import fr.kevpdev.swapi.dtos.FilmDTO;
+import fr.kevpdev.swapi.dtos.PersonDTO;
+import fr.kevpdev.swapi.dtos.SearchResultDTO;
+import fr.kevpdev.swapi.dtos.StarshipDTO;
+import fr.kevpdev.swapi.dtos.VehicleDTO;
 import fr.kevpdev.swapi.services.PersonService;
 import java.net.URI;
 import java.util.List;
@@ -95,10 +99,10 @@ public class PersonServiceImpl implements PersonService {
   /**
    * Retrieves DTO object list by hypermedia link
    *
+   * @param <T> DTO type
    * @param urls hypermedialink list
    * @param responseType DTO type
    * @return a Mono containing the Generic DTO object list if found or empty if not
-   * @param <T>
    */
   public <T> Mono<List<T>> getResourcesByUrls(List<String> urls, Class<T> responseType) {
     return Flux.fromIterable(urls)

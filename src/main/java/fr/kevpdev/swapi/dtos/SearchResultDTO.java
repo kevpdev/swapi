@@ -8,8 +8,8 @@ import lombok.Data;
 @Builder
 public class SearchResultDTO<T> {
 
-  public Integer count;
-  public String next;
-  public String previous;
-  public List<T> results;
+  private Integer count;
+  private String next;
+  private String previous;
+  private List<T> results;
 }
