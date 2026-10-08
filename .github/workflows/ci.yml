@@ -7,8 +7,8 @@ permissions:
   contents: read
 
 jobs:
-  check:
-    name: check
+  lint-and-tests:
+    name: lint-and-tests
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -17,5 +17,40 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Compile and run the tests
+      # One job on purpose: split into lint and unit-tests, the skipped analysers still cost about
+      # 14 s to load and the split run was slower (kevpdev/swapi#7).
+      - name: Format, style, static analysis, unit tests and coverage (Maven verify)
         run: sh ./mvnw -B verify
+
+  security:
+    name: security
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          limit-severities-for-sarif: true
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+
+  # The only check the ruleset requires. `always()` keeps it from being skipped when a job fails,
+  # since GitHub counts a skipped job as passed.
+  ci:
+    name: ci
+    if: always()
+    needs: [lint-and-tests, security]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fail unless every job passed
+        run: test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = false
