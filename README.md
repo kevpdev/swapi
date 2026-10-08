@@ -28,11 +28,11 @@ Bienvenue dans **SWAPI**, une API Spring Boot conçue pour consommer et servir d
    ```
 3. Compilez le projet avec Maven :
    ```bash
-   mvn clean install
+   sh ./mvnw clean install
    ```
 4. Lancez l'application :
    ```bash
-   mvn spring-boot:run
+   sh ./mvnw spring-boot:run
    ```
    L'application sera accessible par défaut à l'URL **http://localhost:8080**.
 
