@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN" "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+  <!-- Javadoc is not required on every type and method. -->
+  <suppress checks="MissingJavadoc.*|SummaryJavadoc" files=".*"/>
+  <!-- DTO is the project suffix for transfer objects (searchResultDTO, filmDTO). -->
+  <suppress checks="AbbreviationAsWordInName" files=".*"/>
+  <!-- Test names follow should_<effect>_when_<condition>. -->
+  <suppress checks="GoogleMethodName" files=".*[\\/]src[\\/]test[\\/].*"/>
+  <!-- MGLT is the JSON field name of the SWAPI starship payload. -->
+  <suppress checks="GoogleNonConstantFieldName" files=".*StarshipDTO\.java"/>
+</suppressions>
