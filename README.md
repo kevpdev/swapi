@@ -135,7 +135,7 @@ La commande `sh ./mvnw verify` est la barrière unique, en local comme en CI. El
 4. **Tests** (Surefire, classes `*Test`).
 5. **JaCoCo** : rapport dans `target/site/jacoco`, échec sous **40 %** de lignes couvertes.
 
-Le workflow `.github/workflows/ci.yml` lance cette commande dans le job `check`. Trois autres contrôles tournent sur les pull requests : `security` (Trivy, dépendances), `codeql` (code Java et workflows GitHub Actions) et Dependabot (`github-actions` et `maven`, chaque semaine). La branche `main` exige `check` et `security`.
+Le workflow `.github/workflows/ci.yml` répartit cette chaîne en deux jobs parallèles : `lint` (`sh ./mvnw -B process-classes`, étapes 1 à 3) et `unit-tests` (`verify` avec les analyseurs sautés, étapes 4 et 5). Le job `security` (Trivy, dépendances) tourne à côté, puis la porte `ci` échoue si l'un des trois échoue. La branche `main` n'exige que `ci`. `codeql` (code Java et workflows GitHub Actions) tourne à part, non exigé, et Dependabot met à jour `github-actions` et `maven` chaque semaine.
 
 Pour des tests d'intégration `*IT`, il faut déclarer `maven-failsafe-plugin` dans le `pom.xml` : sans lui, Maven ignore ces classes sans erreur.
 

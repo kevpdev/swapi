@@ -7,8 +7,8 @@ permissions:
   contents: read
 
 jobs:
-  check:
-    name: check
+  lint:
+    name: lint
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -17,5 +17,54 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Compile and run the tests
-        run: sh ./mvnw -B verify
+      - name: Format, style and static analysis (Spotless, Checkstyle, PMD, SpotBugs)
+        run: sh ./mvnw -B process-classes
+
+  unit-tests:
+    name: unit-tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # The analysers already ran in `lint`.
+      - name: Unit tests and the coverage threshold (Surefire, JaCoCo)
+        run: >-
+          sh ./mvnw -B verify
+          -Dspotless.check.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dspotbugs.skip=true
+
+  security:
+    name: security
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          limit-severities-for-sarif: true
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+
+  # The only check the ruleset requires. `always()` keeps it from being skipped when a job fails,
+  # since GitHub counts a skipped job as passed.
+  ci:
+    name: ci
+    if: always()
+    needs: [lint, unit-tests, security]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fail unless every job passed
+        run: test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = false
