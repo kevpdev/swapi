@@ -1,17 +1,15 @@
 package fr.kevpdev.swapi.dtos;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
-public class SearchResultDTO <T> {
+public class SearchResultDTO<T> {
 
-    public Integer count;
-    public String next;
-    public String previous;
-    public List<T> results;
-
+  private Integer count;
+  private String next;
+  private String previous;
+  private List<T> results;
 }

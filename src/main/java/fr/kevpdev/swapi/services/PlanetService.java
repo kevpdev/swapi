@@ -6,7 +6,9 @@ import reactor.core.publisher.Mono;
 
 public interface PlanetService {
 
-    Mono<PlanetDTO> getPlanetById(Integer id);
-    Mono<SearchResultDTO<PlanetDTO>> getPlanets(Integer pageId);
-    Mono<SearchResultDTO<PlanetDTO>> getPlanetByName(String name);
+  Mono<PlanetDTO> getPlanetById(Integer id);
+
+  Mono<SearchResultDTO<PlanetDTO>> getPlanets(Integer pageId);
+
+  Mono<SearchResultDTO<PlanetDTO>> getPlanetByName(String name);
 }

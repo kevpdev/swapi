@@ -4,39 +4,46 @@ import fr.kevpdev.swapi.dtos.PersonDTO;
 import fr.kevpdev.swapi.dtos.SearchResultDTO;
 import fr.kevpdev.swapi.services.PersonService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/people")
 public class PersonController {
 
-    private final PersonService personService;
+  private final PersonService personService;
 
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
+  public PersonController(PersonService personService) {
+    this.personService = personService;
+  }
 
-    @GetMapping("/{id}")
-    public Mono<ResponseEntity<PersonDTO>> getPersonById(@PathVariable int id) {
-        return personService.getPersonById(id)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
+  @GetMapping("/{id}")
+  public Mono<ResponseEntity<PersonDTO>> getPersonById(@PathVariable int id) {
+    return personService
+        .getPersonById(id)
+        .map(ResponseEntity::ok)
+        .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
 
-    @GetMapping
-    public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPeople(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageId) {
-        return personService.getPeople(pageId)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
+  @GetMapping
+  public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPeople(
+      @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageId) {
+    return personService
+        .getPeople(pageId)
+        .map(ResponseEntity::ok)
+        .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
 
-    @GetMapping("/search")
-    public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPersonByName(@RequestParam String name) {
-        return personService.getPersonByName(name)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
+  @GetMapping("/search")
+  public Mono<ResponseEntity<SearchResultDTO<PersonDTO>>> getPersonByName(
+      @RequestParam String name) {
+    return personService
+        .getPersonByName(name)
+        .map(ResponseEntity::ok)
+        .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
 }

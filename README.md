@@ -12,6 +12,7 @@ Bienvenue dans **SWAPI**, une API Spring Boot conçue pour consommer et servir d
 - [Endpoints](#endpoints)
 - [Exemples d'utilisation](#exemples-dutilisation)
 - [Tests](#tests)
+- [Qualité et CI](#qualité-et-ci)
 - [Swagger UI](#swagger-ui)
 - [Contributions](#contributions)
 
@@ -121,8 +122,22 @@ Réponse :
 Le projet inclut des tests unitaires et d'intégration utilisant **Spring Boot Starter Test** et **Reactor Test** pour les flux réactifs. Pour exécuter les tests :
 
 ```bash
-mvn test
+sh ./mvnw test
 ```
+
+## Qualité et CI
+
+La commande `sh ./mvnw verify` est la barrière unique, en local comme en CI. Elle enchaîne, dans cet ordre :
+
+1. **Spotless** (`google-java-format`) : vérifie le format. `sh ./mvnw spotless:apply` le corrige.
+2. **Checkstyle** (`google_checks.xml`) : lint. Les exceptions sont dans `config/checkstyle-suppressions.xml`.
+3. **PMD** et **SpotBugs** : analyse statique.
+4. **Tests** (Surefire, classes `*Test`).
+5. **JaCoCo** : rapport dans `target/site/jacoco`, échec sous **40 %** de lignes couvertes.
+
+Le workflow `.github/workflows/ci.yml` lance cette commande dans le job `check`. Trois autres contrôles tournent sur les pull requests : `security` (Trivy, dépendances), `codeql` (code Java et workflows GitHub Actions) et Dependabot (`github-actions` et `maven`, chaque semaine). La branche `main` exige `check` et `security`.
+
+Pour des tests d'intégration `*IT`, il faut déclarer `maven-failsafe-plugin` dans le `pom.xml` : sans lui, Maven ignore ces classes sans erreur.
 
 ## Swagger UI
 
